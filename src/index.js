@@ -4,6 +4,9 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+
+// document.getElementById('root').innerHTML =
+// marked.parse('# Marked in the browser\n\nRendered by **marked**.');
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
