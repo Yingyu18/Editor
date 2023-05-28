@@ -11,3 +11,13 @@
     text-align: center;
     padding: 12px;
 }
+
+.hover-effect:hover {
+    /* Add your desired hover effect styles here */
+    /* For example, change the text color */
+    color: red;
+    /* or add a background color */
+    background-color: yellow;
+    /* or add a text shadow */
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+  }

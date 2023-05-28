@@ -1,0 +1,16 @@
+var express = require('express');
+var router = express.Router();
+
+const {
+    createPage,
+    getPage,
+    savePage
+} = require('../controllers/page_controller.js');
+const { getInfo } = require('../models/page_model');
+
+router.post('/create', createPage)
+router.get('/getPage/:pageName', getPage)
+router.patch('/save', savePage)
+
+
+module.exports = router;

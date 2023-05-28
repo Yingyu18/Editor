@@ -1,0 +1,25 @@
+#切換頁面的時候把整張 page 的 elements array 更新到資料庫
+增加 element 的前後指標
+page->element
+
+element table
+elementId pageId index content
+
+
+###tag
+update: 換 block 的時候更新(render 到的時候更新) elementId(pageId + elementId) => tag[]
+1. 比對原本的和新增的
+
+
+table:
+tagname elementId 
+(unique)
+
+API
+getTag 
+createTag
+deleteTag
+
+
+
+listFunction
