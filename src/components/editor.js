@@ -13,7 +13,7 @@ var md = require('markdown-it')({
 });
 
 // 用 useRef
-function Editor() {
+function Editor({pageName}) {
   const [markdown, setMarkdown] = useState('');
   const [elements, setElements] = useState([]);
   const [currentEditingIndex, setCurrentEditingIndex] = useState(-1);
@@ -21,17 +21,22 @@ function Editor() {
   const [enterKeyPressed, setEnterKeyPressed] = useState(false);
 
 
+  useEffect(() => {
+    console.log("pageName:", pageName);
+  }, []);
+
   useLayoutEffect(() => {
     const newElement = "";
     setElements([...elements, newElement]);
     setCurrentEditingIndex(0)
   }, []);
 
-  useEffect(() => {
-    console.log(currentEditingIndex)
-    console.log(elements[currentEditingIndex])
-  }, [currentEditingIndex]);
+  // useEffect(() => {
+  //   console.log(currentEditingIndex)
+  //   console.log(elements[currentEditingIndex])
+  // }, [currentEditingIndex]);
   
+
   //add new line
   const handleInsert = (index) => {
     const newElement = "";
@@ -60,11 +65,11 @@ function Editor() {
         }
         handleInsert(index+1)
         setCurrentEditingIndex(currentEditingIndex+1)
-        console.log(currentEditingIndex)
+        // console.log(currentEditingIndex)
       }
       if (event.key == 'Backspace') {
         if(elements.length>1 && elements[index]==''){
-          console.log("delete from ", elements.length, " elements")
+          // console.log("delete from ", elements.length, " elements")
           handleDelete(index)
         }
         // setCurrentEditingIndex(currentEditingIndex+1)
@@ -91,7 +96,6 @@ function Editor() {
 function scanTag(str){
     let tag = false
     for(let i=0; i<str.length; i++){
-      console.log(str[i])
         if(str[i]=='@' && str[i+1]!=' '){
             tag = true
             if(i===0){
@@ -104,7 +108,7 @@ function scanTag(str){
         }
         else if(tag===true){ 
           if(str[i+1]===' ' || i+1===str.length){
-            console.log('end tag')
+            // console.log('end tag')
             str = str.substring(0,i+1) + ']()' + str.substring(i+1)
             i+=3
             tag = false
@@ -114,31 +118,14 @@ function scanTag(str){
   
     return str
 }
-  const example = `
-  * Lists
-  * [ ] todo
-    * 1
-    * 2   
-  * [x] done`
-  const markdownText = `
-
-  | Option | Description |
-  | ------ | ----------- |
-  | data   | path to data files to supply the data that will be passed into templates. |
-  | engine | engine to be used for processing templates. Handlebars is the default. |
-  | ext    | extension to be used for dest files. |
-  `
-  //用 
-
   return (
     <div>
-    
     { elements.length === 0 ? (handleInsert(0)
      /* <textarea>type something...</textarea> */
     ) : (
     <div>
       {elements.map((element, index) => (
-        console.log("index: ", index, "currentEdit: ", currentEditingIndex),
+        //console.log("index: ", index, "currentEdit: ", currentEditingIndex),
         <div key={index}>
           { index === currentEditingIndex ? (
             <textarea 
@@ -171,90 +158,8 @@ function scanTag(str){
     </div>
   )
 };
-// popup menu + scrollBar 
-const Toggle = () => {
-  const contentRef = useRef(null);
-
-  const handleInput = () => {
-    const content = contentRef.current;
-    const selection = window.getSelection();
-
-    if (selection && selection.rangeCount > 0) {
-      const range = selection.getRangeAt(0);
-      const text = range.startContainer.textContent;
-      const lastWord = text.substring(0, range.startOffset).split(' ').pop();
-
-      if (lastWord === '/') {
-        const rect = range.getBoundingClientRect();
-        const blockSelector = document.getElementById('block-selector');
-
-        blockSelector.style.top = `${rect.bottom}px`;
-        blockSelector.style.left = `${rect.left}px`;
-        blockSelector.style.display = 'block';
-      } else {
-        document.getElementById('block-selector').style.display = 'none';
-      }
-    }
-  };
-
-  return (
-    <div>
-      <div
-        ref={contentRef}
-        contentEditable="true"
-        onInput={handleInput}
-        style={{ border: '1px solid #ccc', minHeight: '100px', padding: '10px' }}
-      ></div>
-      <div
-        id="block-selector"
-        style={{
-          display: 'none',
-          position: 'absolute',
-          border: '1px solid #ccc',
-          padding: '10px',
-          width: '200px',
-          backgroundColor: '#f5f5f5',
-          overflow: 'auto',
-        }}
-      >
-          <div style={{ display: 'flex', flexDirection: 'column',justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-            <span>Block Selector</span>
-            <button style={{ marginBottom: '5px' }}>Button 1</button>
-            <button style={{ marginBottom: '5px' }}>Button 2</button>
-            <button style={{ marginBottom: '5px' }}>Button 3</button>
-            <button style={{ marginBottom: '5px' }}>Button 4</button>
-            <button style={{ marginBottom: '5px' }}>Button 5</button>
-            <button style={{ marginBottom: '5px' }}>Button 6</button>
-            <button style={{ marginBottom: '5px' }}>Button 7</button>
-            <button style={{ marginBottom: '5px' }}>Button 8</button>
-            <button style={{ marginBottom: '5px' }}>Button 9</button>
-            <button style={{ marginBottom: '5px' }}>Button 10</button>
-          </div>
-      </div>
-  </div>
-  );
-};
-
-const input = `<div class="note">
-Some *emphasis* and <strong>strong</strong>!
-</div>`
-
-const MarkdownRenderer = ({ input }) => {
-  return (
-    <ReactMarkdown rehypePlugins={[rehypeRaw]} children={input} />
-  );
-};
-
-export default MarkdownRenderer;
-
 export {
   Editor,
-  Toggle,
-  MarkdownRenderer
-
 };
 
-
-
-//export default NoteEditor;
 

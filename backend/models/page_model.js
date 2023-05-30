@@ -1,21 +1,33 @@
-const { pool } = require('./db_connection');
+const  pool  = require('./db_connection');
 
 const createPage = async (pageName) => {
+  const conn = await pool.getConnection()
   try{
-    const conn = await pool.getConnection()
     const result = await conn.query("INSERT INTO page (name) VALUES (?)", [pageName])
-    return result.insertId
+    return result
   } catch(error){
-        console.log({error:error})
-        return {error}
+        console.log(error)
+        return {error:error}
   } finally {
         await conn.release();
   }
 }
-
-const getInfo = async (pageName) => {
+const listPage = async () => {
+    const conn = await pool.getConnection()
     try{
-        const conn = await pool.getConnection()
+        const results = await conn.query("SELECT name FROM page")
+        console.log(results[0])
+        return results[0]
+      } catch(error){
+            console.log({error:error})
+            return {error}
+      } finally {
+            await conn.release();
+      } 
+}
+const getInfo = async (pageName) => {
+    const conn = await pool.getConnection()
+    try{
         const results = await conn.query("SELECT FROM elements WHERE page_name = ?", [pageName])
         return results
       } catch(error){
@@ -71,5 +83,6 @@ module.exports = {
   createPage,
   getInfo,
   savePage,
-  deletePage  
+  deletePage,
+  listPage  
 };

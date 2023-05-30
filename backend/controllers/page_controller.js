@@ -1,20 +1,29 @@
-const { response } = require('../app');
 const Page = require('../models/page_model');
 
 const createPage = async(req, res) => {
     const {pageName} = req.body
-    const result = Page.createPage(pageName) 
+    const result = await Page.createPage(pageName) 
     if(result.error){
-        res.status(500).send({message:"internal server error"})
+        return res.status(500).send({error:result.error})
     }
     res.status(200).send({
         message: "success create page"
     })
 }
 
+const listPage = async(req, res) => {
+    const result = await Page.listPage() 
+    if(result.error){
+        return res.status(500).send({error:result.error})
+    }
+    res.status(200).send({
+        pages:result 
+    })
+}
+
 const getPage = async(req, res) => {
     const {pageName} = req.params
-    const results = Page.getInfo(pageName)
+    const results = await Page.getInfo(pageName)
     //get my content 
     if(result.error){
         res.status(500).send({message:"internal server error"})
@@ -30,7 +39,7 @@ const getPage = async(req, res) => {
 
 const savePage = async(req, res) => {
     const {pageName, elements} = req.body
-    let result = Page.savePage(pageName, elements)
+    let result = await Page.savePage(pageName, elements)
     if(result.error){
         res.status(500).send({message:result.error})
     }
@@ -51,7 +60,8 @@ module.exports = {
     createPage,
     getPage,
     savePage,
-    deletePage
+    deletePage,
+    listPage
 };
 
 

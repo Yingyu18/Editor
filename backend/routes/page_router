@@ -4,13 +4,16 @@ var router = express.Router();
 const {
     createPage,
     getPage,
-    savePage
+    savePage,
+    listPage,
+    deletePage
 } = require('../controllers/page_controller.js');
-const { getInfo } = require('../models/page_model');
 
 router.post('/create', createPage)
+router.get('/listPage', listPage)
 router.get('/getPage/:pageName', getPage)
 router.patch('/save', savePage)
+router.delete('/delete', deletePage)
 
 
 module.exports = router;
