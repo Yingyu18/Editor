@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { Button, Modal } from 'antd';
 import SearchPage from './searchPage';
 
-const CreateButton = ({pageList}) => {
+const CreateButton = ({pageList, changePage, refresh}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [refresh, setRefresh] = useState(0)
+  const [clear, setClear] = useState(0)
   const showModal = () => {
-    setRefresh(refresh+1)
+    setClear(clear+1)
     setIsModalOpen(true);
   };
 
@@ -23,9 +23,9 @@ const CreateButton = ({pageList}) => {
       <Button type="primary" onClick={showModal}>
         + Create Page
       </Button>
-      <Modal title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+      <Modal title="Create Page" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} >
       <>
-        <SearchPage pageList={pageList} refresh={refresh}/>
+        <SearchPage pageList={pageList} clear={clear} changePage={changePage} handleOk={handleOk} refresh={refresh}/>
       </>
       </Modal>
     </>

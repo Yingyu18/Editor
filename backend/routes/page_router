@@ -13,7 +13,7 @@ router.post('/create', createPage)
 router.get('/listPage', listPage)
 router.get('/getPage/:pageName', getPage)
 router.patch('/save', savePage)
-router.delete('/delete', deletePage)
+router.delete('/delete/:pageName', deletePage)
 
 
 module.exports = router;

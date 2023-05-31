@@ -25,8 +25,8 @@ const getPage = async(req, res) => {
     const {pageName} = req.params
     const results = await Page.getInfo(pageName)
     //get my content 
-    if(result.error){
-        res.status(500).send({message:"internal server error"})
+    if(results.error){
+        return res.status(500).send({message:"internal server error"})
     }
     let elements = []
     for(let i=0; i<results.length; i++){
@@ -41,7 +41,7 @@ const savePage = async(req, res) => {
     const {pageName, elements} = req.body
     let result = await Page.savePage(pageName, elements)
     if(result.error){
-        res.status(500).send({message:result.error})
+        return res.status(500).send({message:result.error})
     }
     res.status(200).send({message:'update success'})
 
@@ -49,7 +49,7 @@ const savePage = async(req, res) => {
 
 const deletePage = async(req, res) => { 
     const {pageName} = req.params
-    let result = Page.deletPage(pageName)
+    let result = await Page.deletePage(pageName)
     if(result.error){
         res.status(500).send({message:result.error})
     }

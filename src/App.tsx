@@ -1,18 +1,15 @@
 //import dotenv from 'dotenv';
-import CreateButtonfrom from './components/create'
 import axios from 'axios';
 import type { MenuProps } from 'antd';
 import { Breadcrumb, Layout, Menu, theme, Button } from 'antd';
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import CreateButton from './components/create';
-// const fs = require('fs');
-// const path = require('path');
-// const os = require('os');
 const {Editor} = require('./components/editor');
 
 // require('dotenv').config()
 const BASE_URL = 'http://localhost:8000/api'
+const HOME = 'http://localhost:3000'
 // const {BASE_URL} = process.env
 
 const { Header, Content, Sider } = Layout;
@@ -54,15 +51,48 @@ const App: React.FC = () => {
   const [editorPage, setEditorPage] = useState('');
   const [refresh, setRefresh] = useState(0)
 
-
+  const handlePage = (pageName) => {
+      console.log("handlePage")
+      setEditorPage(pageName)
+  }
+  const handleRefresh = () => {
+    setRefresh(refresh+1)
+  }
   const handleItemClick = (label: string) => {
-    setEditorPage(label);
+    //setEditorPage(label);
+    window.location.href = `${HOME}/?page=${label}`
+  };
+
+  const deletePage = () => {
+    axios.delete(`${BASE_URL}/page/delete/${editorPage}`)
+    .then( function (response) {
+      console.log(response)
+      setRefresh(refresh+1)
+      setEditorPage('')
+    })
+    .catch(function (error) {
+      // Handle the error
+      console.error(error)
+    });
   };
 
   useEffect(() => {
     console.log("editor page:", editorPage);
   }, [editorPage]);
 
+  useEffect(() => {
+    // Get the query string from the current URL
+    const queryString = window.location.search;
+    const params = new URLSearchParams(queryString);
+    // Get the value of a specific query parameter
+    const page = params.get('page');
+    if (page !== null) {
+      console.log(page);
+      setEditorPage(page)
+    }
+  }, []);
+
+  //refresh Menu
   useEffect(() => {
     let menuItems: MenuItem[] = [];
     axios.get(`${BASE_URL}/page/listPage`)
@@ -73,7 +103,6 @@ const App: React.FC = () => {
         for (let i: number = 0; i < data.length; i++) {
           pageList[i] = data[i].name
           const menuItemLabel = data[i].name; // Assign each string as the label
-          console.log("onclick parameter: ", menuItemLabel)
           const menuItem = getItem(menuItemLabel, i.toString(), undefined, undefined, () => handleItemClick(menuItemLabel));
           // Add the menuItem to the menuItems array
           menuItems.push(menuItem);
@@ -95,22 +124,30 @@ const App: React.FC = () => {
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
-        <CreateButton pageList={pageList}/>
+        <CreateButton pageList={pageList} changePage={handlePage} refresh={handleRefresh}/>
         <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} />
       </Sider>
       <Layout>
         {/* <Header style={{ padding: 0, background: colorBgContainer }} >Editor </Header> */}
+        <Button type="primary" danger onClick={deletePage}>
+          Delete page
+        </Button>
         <Content style={{ margin: '0 16px' }}>
           <Breadcrumb style={{ margin: '16px 0' }} >
               <Editor pageName={editorPage}/>
-            {/* <Breadcrumb.Item>User</Breadcrumb.Item>
-            <Breadcrumb.Item>Bill</Breadcrumb.Item> */}
           </Breadcrumb>
-          {/* <div style={{ padding: 24, minHeight: 360, background: colorBgContainer }}>
-            Bill is a cat.
-          </div> */}
         </Content>
-        {/* <Footer style={{ textAlign: 'center' }}>Ant Design ©2023 Created by Ant UED</Footer> */}
+      </Layout>
+      <Layout>
+        {/* <Header style={{ padding: 0, background: colorBgContainer }} >Editor </Header> */}
+        <Button type="primary" danger onClick={deletePage}>
+          Delete page
+        </Button>
+        <Content style={{ margin: '0 16px' }}>
+          <Breadcrumb style={{ margin: '16px 0' }} >
+              <Editor pageName={editorPage}/>
+          </Breadcrumb>
+        </Content>
       </Layout>
     </Layout>
   );

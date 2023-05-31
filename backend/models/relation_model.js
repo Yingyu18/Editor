@@ -1,9 +1,22 @@
-const { pool } = require('./db_connection');
+const  pool  = require('./db_connection');
 
 const deleteRelation = async (pageName, mention, oldContent) => {
     const conn = await pool.getConnection()
     try{
         await conn.query("DELETE FROM relation WHERE page=? AND mention=? AND content=?",[pageName, mention, oldContent])
+    } catch (error){
+        console.log({error:error})
+        return{error}
+    } finally {
+        await conn.release();
+    } 
+}
+const deletePageRelation = async (pageName) => {
+    const conn = await pool.getConnection()
+    try{
+        await conn.query("DELETE FROM relation WHERE page=? AND new=?",[pageName, 0])
+        await conn.query("UPDATE relation SET new=0 WHERE page=?", [pageName])
+        return 0
     } catch (error){
         console.log({error:error})
         return{error}
@@ -29,7 +42,8 @@ const createRelation = async (pageName, mention, newContent) => {
         if(results.length<1){
             await conn.query("INSERT INTO page (name) VALUES (?)", [mention])
         }
-        await conn.query("INSERT INTO relation (page, mention, content) VALUES (?,?,?)",[pageName, mention, newContent])
+        results =  await conn.query("INSERT INTO relation (page, mention, content, new) VALUES (?,?,?,?)",[pageName, mention, newContent, 1])
+        return results
     } catch (error){
         console.log({error:error})
         return{error}
@@ -41,5 +55,6 @@ const createRelation = async (pageName, mention, newContent) => {
 module.exports = {
     deleteRelation,
     updateContent,
-    createRelation
+    createRelation,
+    deletePageRelation
 }

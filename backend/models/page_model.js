@@ -28,8 +28,8 @@ const listPage = async () => {
 const getInfo = async (pageName) => {
     const conn = await pool.getConnection()
     try{
-        const results = await conn.query("SELECT FROM elements WHERE page_name = ?", [pageName])
-        return results
+        const results = await conn.query("SELECT * FROM elements WHERE page_name = ?", [pageName])
+        return results[0]
       } catch(error){
             console.log({error:error})
             return {error}
@@ -38,8 +38,8 @@ const getInfo = async (pageName) => {
       } 
 }
 const savePage = async (pageName, elements) => {
+    const conn = await pool.getConnection()   
     try{
-        const conn = await pool.getConnection()   
         //save the current elements of the page into table
         for(let i=0; i<elements.length; i++){
             await conn.query("INSERT INTO elements (page_name, content) VALUES (?, ?)", [pageName, elements[i]])
@@ -48,7 +48,7 @@ const savePage = async (pageName, elements) => {
             await  conn.query("DELETE FROM elements WHERE page_name=? AND new=?", [pageName, 0])
         //set the new elements set new column to false
             await conn.query("UPDATE elements SET new=0 WHERE page_name=?", [pageName])
-            return 
+            return {message:"success"}
       } catch(error){
             console.log({error:error})
             return {error}
@@ -64,11 +64,11 @@ const deletePage = async (pageName) => {
     try{
         await conn.query('START TRANSACTION');   
         await  conn.query("DELETE FROM elements WHERE page_name=?", [pageName])
-        await  conn.query("DELETE FROM page WHERE page_name=?", [pageName])
+        await  conn.query("DELETE FROM page WHERE name=?", [pageName])
         await  conn.query("DELETE FROM relation WHERE page=?", [pageName])
         await  conn.query("DELETE FROM relation WHERE mention=?", [pageName])
         await conn.query('COMMIT')
-        return 
+        return {message:"success"}
       } catch(error){
             console.log({error:error})
             await conn.query('ROLLBACK');

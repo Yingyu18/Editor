@@ -9,9 +9,13 @@ import reportWebVitals from './reportWebVitals';
 // marked.parse('# Marked in the browser\n\nRendered by **marked**.');
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
+//  <Router>
+//    <Route path="/page" component={App}>
+//    </Route>
+//  </Router>
+   <React.StrictMode>
     <App />
-  </React.StrictMode>
+  </React.StrictMode> 
 );
 // const myContainer = ReactDOM.createRoot(document.getElementById('myContainer'));
 // myContainer.render(
