@@ -6,6 +6,7 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import CreateButton from './components/create';
 import Cited from './components/cited';
+import Delete from './components/delete';
 const {Editor} = require('./components/editor');
 
 // require('dotenv').config()
@@ -68,7 +69,8 @@ const App: React.FC = () => {
     axios.delete(`${BASE_URL}/page/delete/${editorPage}`)
     .then( function (response) {
       console.log(response)
-      setRefresh(refresh+1)
+      window.location.href = `${HOME}`
+      //setRefresh(refresh+1)
       setEditorPage('')
     })
     .catch(function (error) {
@@ -104,7 +106,7 @@ const App: React.FC = () => {
         for (let i: number = 0; i < data.length; i++) {
           pageList[i] = data[i].name
           const menuItemLabel = data[i].name; // Assign each string as the label
-          const menuItem = getItem(menuItemLabel, i.toString(), undefined, undefined, () => handleItemClick(menuItemLabel));
+          const menuItem = getItem(menuItemLabel, menuItemLabel, undefined, undefined, () => handleItemClick(menuItemLabel));
           // Add the menuItem to the menuItems array
           menuItems.push(menuItem);
         }
@@ -130,9 +132,9 @@ const App: React.FC = () => {
       </Sider>
       <Layout>
         {/* <Header style={{ padding: 0, background: colorBgContainer }} >Editor </Header> */}
-        <Button type="primary" danger onClick={deletePage}>
+        {/* <Button type="primary" danger onClick={deletePage}>
           Delete page
-        </Button>
+        </Button> */}
         <Content style={{ margin: '0 16px' }}>
           <Breadcrumb style={{ margin: '16px 0' }} >
               <Editor pageName={editorPage}/>
@@ -141,9 +143,10 @@ const App: React.FC = () => {
       </Layout>
       <Layout>
         {/* <Header style={{ padding: 0, background: colorBgContainer }} >Editor </Header> */}
-        <Button type="primary" danger onClick={deletePage}>
+        {/* <Button type="primary" danger onClick={deletePage}>
           Delete page
-        </Button>
+        </Button> */}
+        <Delete deletePage={deletePage} pageName={editorPage}/>
         <Content style={{ margin: '0 16px' }}>
           <Breadcrumb style={{ margin: '16px 0' }} >
               <Cited pageName={editorPage} />

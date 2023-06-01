@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useLayoutEffect  } from 'react';
+import React, { useState, useEffect} from 'react';
 import axios from 'axios';
 import { Card } from 'antd';
 import './cited.css';
@@ -26,7 +26,8 @@ function Cited( {pageName}) {
         window.location.href = `${HOME}/?page=${page}`;
       }; 
     return (
-    <>
+    <div>
+      <h1>Cited</h1>
       {cardData.map((data, index) => (
         <Card style={{ width: 500}} border = 'false'>
         {/* <BrowserRouter basename={HOME}> */}
@@ -37,7 +38,7 @@ function Cited( {pageName}) {
             <p>{data.content}</p>
         </Card>
       ))}
-    </>
+    </div>
     );
 }
 

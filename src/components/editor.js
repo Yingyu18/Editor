@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useLayoutEffect  } from 'react';
 import axios from 'axios';
-import ReactMarkdown from 'react-markdown'
+import './editor.css'
 import remarkGfm from 'remark-gfm'
 var Remarkable = require('react-remarkable');
 var rehypeRaw = require("rehype-raw");
@@ -255,7 +255,7 @@ function scanTag(str, pageName){
               value={element}
               onKeyDown={(event) => handleKeyDown(event, index)}
               onKeyUp={(event) => handleKeyUp(event)}
-              style={{ border: 'none', resize: 'none', outline: 'none' }} 
+              style={{ border: 'none', resize: 'none', outline: 'none' ,width: '500px', fontSize: '20px'}} 
               onChange={(e) => handleElementChange(index, e.target.value)}
               // onChange={(e) => {
               //   setTempElement(e.target.value)
