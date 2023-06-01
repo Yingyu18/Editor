@@ -3,12 +3,14 @@ var router = express.Router();
 
 const {
     updateRelation,
-    updatePage
+    updatePage,
+    getCited
 } = require('../controllers/relation_controller.js');
 
 
 router.patch('/update', updateRelation)
 router.patch('/updatePage', updatePage)
+router.get('/getCited/:pageName', getCited )
 
 
 

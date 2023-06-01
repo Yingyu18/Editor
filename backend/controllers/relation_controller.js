@@ -75,13 +75,14 @@ const updatePage = async(req, res) => {
             let newTags = scanTag(newElements[i])
             console.log("new tags", newTags)
                 // 新增 relation
-            for(let i=0; i<newTags.length; i++){
+            for(let j=0; j<newTags.length; j++){
                 // if the page be mentioned not exist yet
-                let result = await Page.getInfo(newTags[i])
+                let result = await Page.getInfo(newTags[j])
                 if( result.length <1){
-                    await Page.createPage(newTags[i])
+                    await Page.createPage(newTags[j])
                 }
-                result = await Relation.createRelation(pageName, newTags[i], newElements[i])
+                console.log(`createRelation(${pageName}, ${newTags[j]}, ${newElements[i]}`)
+                result = await Relation.createRelation(pageName, newTags[j], newElements[i])
                 if(result.error){
                     res.status(500).send({message:"internal server error"})
                 }
@@ -124,10 +125,23 @@ function scanTag(str){
     return result
 }
 
+const getCited = async(req, res) => {
+    let {pageName} = req.params
+    // want to get all date in relation (page\content)
+    let results = await Relation.getCited(pageName)
+    console.log(results[0])
+    if(results.error){
+        res.status(500).send({message:"internal server error"})
+    }
+    res.status(200).send(results[0])
+
+}
+
 
 module.exports = {
     updateRelation,
-    updatePage
+    updatePage,
+    getCited
 };
 
 

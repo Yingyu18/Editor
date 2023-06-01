@@ -52,9 +52,23 @@ const createRelation = async (pageName, mention, newContent) => {
     } 
 }
 
+const getCited = async (pageName) => {
+    const conn = await pool.getConnection()
+    try{
+        let results = await conn.query("SELECT * FROM relation WHERE mention=?", [pageName])
+        return results
+    } catch (error){
+        console.log({error:error})
+        return{error}
+    } finally {
+        await conn.release();
+    } 
+}
+
 module.exports = {
     deleteRelation,
     updateContent,
     createRelation,
-    deletePageRelation
+    deletePageRelation,
+    getCited,
 }

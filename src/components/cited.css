@@ -1,0 +1,6 @@
+h1:hover {
+    text-decoration: underline;
+    color: gray;
+    cursor:pointer
+    /* Add any other styles for the hover effect */
+}

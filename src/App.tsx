@@ -5,6 +5,7 @@ import { Breadcrumb, Layout, Menu, theme, Button } from 'antd';
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import CreateButton from './components/create';
+import Cited from './components/cited';
 const {Editor} = require('./components/editor');
 
 // require('dotenv').config()
@@ -145,7 +146,7 @@ const App: React.FC = () => {
         </Button>
         <Content style={{ margin: '0 16px' }}>
           <Breadcrumb style={{ margin: '16px 0' }} >
-              <Editor pageName={editorPage}/>
+              <Cited pageName={editorPage} />
           </Breadcrumb>
         </Content>
       </Layout>
